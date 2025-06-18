@@ -1,0 +1,8 @@
+### 起動チェック
+GET http://localhost:3001/health
+
+### ソーシャルログイン（google）
+GET http://localhost:3001/social/google
+
+### ソーシャルログインコールバック（google）
+GET http://localhost:3001/social/google/callback

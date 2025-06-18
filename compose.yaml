@@ -1,5 +1,5 @@
 include:
-  - ./services/auth-service/compose.yaml
+  - ./services/auth-service/compose.api.yaml
   - ./services/user-service/compose.yaml
 
 services:

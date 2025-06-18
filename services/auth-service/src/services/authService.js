@@ -9,19 +9,14 @@ const prisma = require('../config/prisma');
  * @returns {Promise<object>}
  */
 async function registerUser(username, passwordHash, provider = null, providerUserId = null) {
-  try {
-    const newUser = await prisma.authUser.create({
-      data: {
-        username: username,
-        passwordHash: passwordHash,
-        provider: provider,
-        providerUserId: providerUserId,
-      },
-    });
-    return newUser;
-  } catch (error) {
-    throw error;
-  }
+  return await prisma.authUser.create({
+    data: {
+      username: username,
+      passwordHash: passwordHash,
+      provider: provider,
+      providerUserId: providerUserId,
+    },
+  });
 }
 
 /**
@@ -30,16 +25,11 @@ async function registerUser(username, passwordHash, provider = null, providerUse
  * @returns {Promise<object>}
  */
 async function findUserByUserName(username) {
-  try {
-    const user = await prisma.authUser.findUnique({
-      where: {
-        username: username,
-      },
-    });
-    return user;
-  } catch (error) {
-    throw error;
-  }
+  return await prisma.authUser.findUnique({
+    where: {
+      username: username,
+    },
+  });
 }
 
 /**
@@ -48,16 +38,11 @@ async function findUserByUserName(username) {
  * @returns {Promise<object>}
  */
 async function findUserById(id) {
-  try {
-    const user = await prisma.authUser.findUnique({
-      where: {
-        id: id,
-      },
-    });
-    return user;
-  } catch (error) {
-    throw error;
-  }
+  return await prisma.authUser.findUnique({
+    where: {
+      id: id,
+    },
+  });
 }
 
 /**
