@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AuthUser {
+  id              Int      @id @default(autoincrement())
+  username        String?  @unique
+  passwordHash    String?  @map("password_hash")
+  provider        String?
+  providerUserId  String?  @map("provider_user_id")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([provider, providerUserId])
+  @@map("auth_users")
+}

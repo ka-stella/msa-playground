@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+  <head>
+    <title>認証成功</title>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: #f0f2f5;
+        color: #333;
+      }
+      .container {
+        background-color: #fff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+      }
+      h1 {
+        color: #28a745;
+        margin-bottom: 20px;
+      }
+      p {
+        font-size: 1.1em;
+        line-height: 1.6;
+      }
+      .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-left-color: #007bff;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>認証成功</h1>
+      <p>ダッシュボードにリダイレクトしています...</p>
+      <div class="spinner"></div>
+    </div>
+    <script>
+      const token = 'SCRIPT_TOKEN_PLACEHOLDER';
+      const frontendBaseUrl = 'FRONTEND_URL_PLACEHOLDER';
+
+      localStorage.setItem('authToken', token);
+
+      setTimeout(() => {
+        window.location.replace(frontendBaseUrl + '/#/dashboard');
+      }, 1500);
+    </script>
+  </body>
+</html>

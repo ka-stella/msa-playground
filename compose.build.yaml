@@ -1,0 +1,86 @@
+services:
+  api-gateway:
+    build: ./services/api-gateway
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./services/api-gateway:/app
+    command: npm run dev
+    depends_on:
+      auth-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  auth-service:
+    build: ./services/auth-service
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./services/auth-service:/app
+    command: npm run dev
+    depends_on:
+      db_auth_postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  user-service:
+    build: ./services/user-service
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./services/user-service:/app
+    command: npm run dev
+    depends_on:
+      db_user_postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  db_auth_postgres:
+    image: postgres:16-alpine
+    container_name: sample_auth_postgres
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d auth_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  db_user_postgres:
+    image: postgres:16-alpine
+    container_name: sample_user_postgres
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    volumes:
+      - user_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d user_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  auth_postgres_data:
+  user_postgres_data:

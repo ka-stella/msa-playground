@@ -1,0 +1,20 @@
+### 起動チェック
+GET http://localhost:3002/health
+
+### Create User Data (via API Gateway)
+# User Service にユーザー詳細情報を登録する
+# "auth_user_id" は、上記の Auth Service 登録のレスポンスで得られた "userId" を使用してください。
+# 例: "userId": 1 が返された場合、"auth_user_id": 1 とします。
+POST http://localhost:3002/create
+Content-Type: application/json
+
+{
+    "auth_user_id": 6,
+    "name": "John Doe",
+    "email": "john.doe@example.com"
+}
+
+### Get User Data (via API Gateway)
+# User Service からユーザー詳細情報を取得する
+# "authUserId" は、上記の Auth Service 登録のレスポンスで得られた "userId" を使用してください。
+GET http://localhost:3002/profile/1

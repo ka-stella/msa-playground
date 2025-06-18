@@ -1,0 +1,14 @@
+include:
+  - ./services/auth-service/compose.yaml
+  - ./services/user-service/compose.yaml
+
+services:
+  api-gateway:
+    extends:
+      file: services/api-gateway/compose.yaml
+      service: api-gateway
+    depends_on:
+      auth-service:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy

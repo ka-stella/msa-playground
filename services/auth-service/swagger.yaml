@@ -1,0 +1,124 @@
+openapi: 3.0.0
+info:
+  title: 認証サービスAPI
+  version: 1.0.0
+  description: 認証サービス処理をするためのAPI
+servers:
+  - url: http://localhost:3001
+    description: 認証サービスのサーバ
+paths:
+  /health:
+    get:
+      summary: サービスヘルスチェック
+      responses:
+        '200':
+          description: ユーザーサービスは正常に動作しています！
+  /register:
+    post:
+      summary: ユーザー登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  minLength: 3
+                  maxLength: 30
+                  pattern: '^[a-zA-Z0-9_]+$'
+                  example: user123
+                password:
+                  type: string
+                  minLength: 8
+                  maxLength: 100
+                  example: password123
+              required:
+                - username
+                - password
+      responses:
+        '201':
+          description: ユーザ登録成功
+        '400':
+          description: バリデーションエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: ユーザー名は既に使用されています
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /login:
+    post:
+      summary: ログイン
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: 認証成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  token:
+                    type: string
+        '400':
+          description: 認証失敗
+  /protected:
+    get:
+      summary: Access a protected route (requires JWT)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully accessed protected route
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      userId:
+                        type: integer
+                      username:
+                        type: string
+        '401':
+          description: Unauthorized - No token provided or invalid token
+        '403':
+          description: Forbidden - Invalid token
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'ユーザー名は既に使用されています'
