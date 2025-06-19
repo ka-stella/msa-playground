@@ -8,7 +8,14 @@ if (!JWT_SECRET) {
 }
 
 //認証不要なパス
-const EXEMPT_PATHS = ['/auth/login', '/logout', '/auth/register', '/health'];
+const EXEMPT_PATHS = [
+  '/auth/login',
+  '/logout',
+  '/auth/register',
+  '/auth/social/google',
+  '/auth/social/google/callback',
+  '/health',
+];
 
 const authMiddleware = (req, res, next) => {
   if (EXEMPT_PATHS.includes(req.path) || req.method === 'OPTIONS') {

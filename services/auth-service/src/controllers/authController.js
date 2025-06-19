@@ -80,8 +80,17 @@ async function login(req, res) {
     //JWTトークンの生成
     const token = generateToken({ id: user.id, username: user.username });
 
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: process.env.COOKIE_EXPIRES,
+      sameSite: 'Lax',
+      path: '/',
+      domain: 'localhost',
+    });
+
     console.log(`ログイン成功: ユーザー名 '${username}' (ID: ${user.id})`);
-    res.status(200).json({ message: '認証成功。', token });
+    res.status(200).json({ message: '認証成功。' });
   } catch (error) {
     console.error('認証失敗（サーバーエラー）:', {
       message: error.message,
