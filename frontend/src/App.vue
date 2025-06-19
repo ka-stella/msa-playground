@@ -2,13 +2,28 @@
   <nav>
     <router-link to="/register">ユーザー登録</router-link> |
     <router-link to="/login">ログイン</router-link>
+    <button @click="handleLogout">ログアウト</button>
   </nav>
   <router-view />
 </template>
 
-<script>
-export default {
-  name: "App",
+<script setup>
+import axios from "axios";
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+const handleLogout = async () => {
+  try {
+    const response = await axios.post(
+      `${process.env.VUE_APP_API_BASE_URL}/logout`
+    );
+
+    console.log(response.data.message);
+
+    router.push("/login");
+  } catch (error) {
+    console.error("ログアウトエラー:", error);
+  }
 };
 </script>
 
