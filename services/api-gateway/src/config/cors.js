@@ -1,0 +1,12 @@
+const cors = require('cors');
+
+const corsOptions = () => {
+  return cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true, // Cookieをクロスオリジンで送受信するための設定
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+};
+
+module.exports = corsOptions;
