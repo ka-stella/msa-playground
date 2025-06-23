@@ -12,34 +12,24 @@ paths:
       summary: サービスヘルスチェック
       responses:
         '200':
-          description: ユーザーサービスは正常に動作しています！
+          description: ユーザーサービスは正常に動作
   /register:
     post:
-      summary: ユーザー登録
+      summary: ユーザ登録
+      description: 新規ユーザを登録するAPI
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  minLength: 3
-                  maxLength: 30
-                  pattern: '^[a-zA-Z0-9_]+$'
-                  example: user123
-                password:
-                  type: string
-                  minLength: 8
-                  maxLength: 100
-                  example: password123
-              required:
-                - username
-                - password
+              $ref: '#/components/schemas/RegisterUserInput'
       responses:
         '201':
           description: ユーザ登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterUserResponse'
         '400':
           description: バリデーションエラー
           content:
@@ -52,73 +42,102 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: データベース操作中にエラーが発生しました
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /login:
     post:
       summary: ログイン
+      description: 認証処理（JWTトークンを発行する）API
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                password:
-                  type: string
-              required:
-                - username
-                - password
+              schema:
+                $ref: '#/components/schemas/LoginInput'
       responses:
         '200':
           description: 認証成功
+        '500':
+          description: サーバー内部エラーが発生しました。
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                  token:
-                    type: string
-        '400':
-          description: 認証失敗
-  /protected:
+                $ref: '#/components/schemas/ErrorResponse'
+  /google:
     get:
-      summary: Access a protected route (requires JWT)
-      security:
-        - bearerAuth: []
+      summary: Googleログイン開始
+      description: GoogleのOAuth認証画面へリダイレクト
+      responses:
+        '302':
+          description: Google認証ページへリダイレクト
+  /google/callback:
+    get:
+      summary: Google認証コールバック
+      description: Google認証の結果を受け取り、ログイン処理を行います。
+        成功時はJWTトークンをCookieに保存し、成功ページを表示します。
+        失敗時はフロントエンドのログインページにリダイレクトします。
       responses:
         '200':
-          description: Successfully accessed protected route
+          description: ログイン成功。JWTをcookieに保存し、HTMLページを返します。
           content:
-            application/json:
+            text/html:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                  user:
-                    type: object
-                    properties:
-                      userId:
-                        type: integer
-                      username:
-                        type: string
-        '401':
-          description: Unauthorized - No token provided or invalid token
-        '403':
-          description: Forbidden - Invalid token
+                type: string
+                example: '<!DOCTYPE html><html>...</html>'
+        '302':
+          description: 認証失敗または内部エラー時。ログインページにリダイレクト。
+          headers:
+            Location:
+              description: リダイレクト先URL（フロントエンドのログイン画面）
+              schema:
+                type: string
+                example: 'http://localhost:8080/#/login?error=サーバー内部エラーが発生しました。'
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
   schemas:
+    RegisterUserInput:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          pattern: '^[a-zA-Z0-9]+$'
+          minLength: 3
+          maxLength: 30
+          example: 'sample'
+        password:
+          type: string
+          pattern: '^[a-zA-Z0-9]{3,30}$'
+          minLength: 6
+          example: 'password'
+    RegisterUserResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'ユーザ登録成功'
+        userId:
+          type: string
+          example: '12345'
+    LoginInput:
+      type: object
+      properties:
+        message:
+          type: string
+        token:
+          type: string
+        required:
+          - username
+          - password
     ErrorResponse:
       type: object
       properties:
         message:
           type: string
-          example: 'ユーザー名は既に使用されています'
+          example: 'エラーメッセージ'
