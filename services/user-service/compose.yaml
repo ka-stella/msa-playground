@@ -3,6 +3,7 @@ services:
     build: ./
     ports:
       - '3002:3002'
+      - '18002:9229' # デバッグポート
     volumes:
       - ./:/app
     command: npm run dev

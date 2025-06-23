@@ -38,7 +38,7 @@ app.get('/auth/check', (req, res) => {
 
 //プロキシの設定
 app.use('/auth', authServiceProxyMiddleware);
-app.use('/users', userServiceProxyMiddleware);
+app.use('/user', userServiceProxyMiddleware);
 
 /**
  * <attention>
