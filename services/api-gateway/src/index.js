@@ -1,67 +1,65 @@
-const express = require('express');
-const { createProxyMiddleware } = require('http-proxy-middleware');
-const dotenv = require('dotenv');
+require('dotenv').config();
 
-dotenv.config();
+const express = require('express');
+const corsOptions = require('./config/cors');
+const cookieParser = require('cookie-parser');
+const authMiddleware = require('./middlewares/authMiddleware');
+const authServiceProxyMiddleware = require('./middlewares/proxies/authServiceProxyMiddleware');
+const userServiceProxyMiddleware = require('./middlewares/proxies/userServiceProxyMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
+const isProduction = process.env.NODE_ENV === 'production';
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-  next();
-});
+// CORS設定
+app.use(corsOptions());
+//Cookieパーサー
+app.use(cookieParser());
+//jwt検証
+app.use(authMiddleware);
 
 // ヘルスチェックエンドポイント
-app.get('/health', (req, res) => {
-  res.status(200).send('API Gateway is healthy!');
+if (!isProduction) {
+  app.get('/health', (req, res) => {
+    res.status(200).send('API Gateway is healthy!');
+  });
+}
+
+// 認証状態確認エンドポイント
+app.get('/auth/check', (req, res) => {
+  res.status(200).json({
+    isAuthenticated: true,
+    user: {
+      id: req.user.id,
+      username: req.user.username,
+    },
+  });
 });
 
-/**
- * Auth Service のルーティング
- * '/auth/*' のリクエストを Auth Service に転送
- * 例: /auth/register -> /register
- */
-app.use(
-  '/auth',
-  createProxyMiddleware({
-    target: process.env.AUTH_SERVICE_URL || 'http://localhost:3001',
-    changeOrigin: true,
-    pathRewrite: {
-      '^/auth': '',
-    },
-    onProxyReq: (proxyReq, req, res) => {
-      console.log(
-        `Proxying request: ${req.method} ${req.url} -> <span class="math-inline">\{proxyReq\.protocol\}//</span>{proxyReq.host}${proxyReq.path}`,
-      );
-    },
-  }),
-);
+//プロキシの設定
+app.use('/auth', authServiceProxyMiddleware);
+app.use('/users', userServiceProxyMiddleware);
 
 /**
- * User Service のルーティング
- * '/user/*' のリクエストを User Service に転送
+ * <attention>
+ * express.json()が先にbodyを読み込んでしまうと、
+ * proxyはbodyを送れずrequest abortedになる
  */
-app.use(
-  '/users',
-  createProxyMiddleware({
-    target: process.env.USER_SERVICE_URL || 'http://localhost:3002',
-    changeOrigin: true,
-    pathRewrite: {
-      '^/users': '',
-    },
-    onProxyReq: (proxyReq, req, res) => {
-      console.log(
-        `Proxying request: ${req.method} ${req.url} -> <span class="math-inline">\{proxyReq\.protocol\}//</span>{proxyReq.host}${proxyReq.path}`,
-      );
-    },
-  }),
-);
+app.use(express.json());
+
+// --- ログアウトエンドポイント---
+app.post('/logout', (req, res) => {
+  //cookieをクリア
+  res.clearCookie('jwt', {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: 'Lax',
+    path: '/',
+    domain: 'localhost',
+  });
+  console.log('JWT Cookieをクリアしました。');
+  res.status(200).json({ message: 'ログアウトしました。' });
+});
 
 app.listen(PORT, () => {
   console.log(`API Gateway running on port ${PORT}`);

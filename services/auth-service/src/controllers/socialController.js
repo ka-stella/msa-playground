@@ -31,13 +31,24 @@ async function handleAuthCallback(req, res) {
     const user = req.user;
     const token = generateToken({ id: user.id, username: user.username });
 
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: process.env.COOKIE_EXPIRES,
+      sameSite: 'Lax',
+      path: '/',
+      domain: 'localhost',
+    });
+
     if (!loginSuccessHtmlTemplate) {
       console.error('HTMLテンプレートが読み込まれていません。');
       return res.status(500).send('認証成功ページをロードできませんでした。');
     }
 
-    let successHtml = loginSuccessHtmlTemplate.replace('SCRIPT_TOKEN_PLACEHOLDER', token);
-    successHtml = successHtml.replace('FRONTEND_URL_PLACEHOLDER', process.env.FRONTEND_URL || '');
+    const successHtml = loginSuccessHtmlTemplate.replace(
+      'FRONTEND_URL_PLACEHOLDER',
+      process.env.FRONTEND_URL || '',
+    );
 
     res.send(successHtml);
   } catch (error) {

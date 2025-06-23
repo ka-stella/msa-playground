@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <h1>ログイン</h1>
-    <form @submit.prevent="login">
+    <form @submit.prevent="submitLogin">
       <div>
         <label for="username">ユーザー名:</label>
         <input type="text" id="username" v-model="username" required />
@@ -28,65 +28,43 @@
   </div>
 </template>
 
-<script>
-import axios from "axios";
+<script setup>
+import { authApi } from "@/api/auth";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-export default {
-  name: "LoginView",
-  setup() {
-    const username = ref("");
-    const password = ref("");
-    const message = ref("");
-    const isError = ref("");
-    const router = useRouter();
+const username = ref("");
+const password = ref("");
+const message = ref("");
+const isError = ref("");
+const router = useRouter();
 
-    const login = async () => {
-      try {
-        message.value = "ログイン処理中...";
-        isError.value = false;
+const submitLogin = async () => {
+  try {
+    message.value = "ログイン処理中...";
+    isError.value = false;
 
-        const response = await axios.post(
-          `${process.env.VUE_APP_API_BASE_URL}/auth/login`,
-          {
-            username: username.value,
-            password: password.value,
-          }
-        );
+    const response = await authApi.login(username.value, password.value);
 
-        const { token, userId } = response.data;
-        localStorage.setItem("access_token", token);
-        localStorage.setItem("userId", userId);
+    message.value = response.data.message;
+    username.value = "";
+    password.value = "";
 
-        message.value = response.data.message;
-        username.value = "";
-        password.value = "";
+    router.push("/dashboard");
+  } catch (error) {
+    isError.value = true;
+    if (error.response) {
+      message.value = error.response.data.message || "ログインに失敗しました。";
+    } else {
+      message.value = "ネットワークエラーが発生しました。";
+    }
+  }
+};
 
-        router.push("/dashboard");
-      } catch (err) {
-        isError.value = true;
-        message.value =
-          err.response?.data?.message || "ログインに失敗しました。";
-        console.error("ログインエラー:", err);
-      }
-    };
-
-    const socialLogin = (media) => {
-      if (media === "google") {
-        window.location.href = `${process.env.VUE_APP_API_BASE_URL}/auth/social/google`;
-      }
-    };
-
-    return {
-      username,
-      password,
-      message,
-      isError,
-      login,
-      socialLogin,
-    };
-  },
+const socialLogin = (media) => {
+  if (media === "google") {
+    window.location.href = `${process.env.VUE_APP_API_BASE_URL}/auth/social/google`;
+  }
 };
 </script>
 

@@ -2,14 +2,13 @@
   <nav>
     <router-link to="/register">ユーザー登録</router-link> |
     <router-link to="/login">ログイン</router-link>
+    <LogoutButton />
   </nav>
   <router-view />
 </template>
 
-<script>
-export default {
-  name: "App",
-};
+<script setup>
+import LogoutButton from "@/components/LogoutButton.vue";
 </script>
 
 <style>
