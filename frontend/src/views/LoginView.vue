@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <h1>ログイン</h1>
-    <form @submit.prevent="login">
+    <form @submit.prevent="submitLogin">
       <div>
         <label for="username">ユーザー名:</label>
         <input type="text" id="username" v-model="username" required />
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import axios from "axios";
+import { authApi } from "@/api/auth";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -39,28 +39,25 @@ const message = ref("");
 const isError = ref("");
 const router = useRouter();
 
-const login = async () => {
+const submitLogin = async () => {
   try {
     message.value = "ログイン処理中...";
     isError.value = false;
 
-    const response = await axios.post(
-      `${process.env.VUE_APP_API_BASE_URL}/auth/login`,
-      {
-        username: username.value,
-        password: password.value,
-      }
-    );
+    const response = await authApi.login(username.value, password.value);
 
     message.value = response.data.message;
     username.value = "";
     password.value = "";
 
     router.push("/dashboard");
-  } catch (err) {
+  } catch (error) {
     isError.value = true;
-    message.value = err.response?.data?.message || "ログインに失敗しました。";
-    console.error("ログインエラー:", err);
+    if (error.response) {
+      message.value = error.response.data.message || "ログインに失敗しました。";
+    } else {
+      message.value = "ネットワークエラーが発生しました。";
+    }
   }
 };
 

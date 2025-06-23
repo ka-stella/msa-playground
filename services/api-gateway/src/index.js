@@ -25,6 +25,17 @@ if (!isProduction) {
   });
 }
 
+// 認証状態確認エンドポイント
+app.get('/auth/check', (req, res) => {
+  res.status(200).json({
+    isAuthenticated: true,
+    user: {
+      id: req.user.id,
+      username: req.user.username,
+    },
+  });
+});
+
 //プロキシの設定
 app.use('/auth', authServiceProxyMiddleware);
 app.use('/users', userServiceProxyMiddleware);
