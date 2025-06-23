@@ -24,13 +24,6 @@ graph LR
     AS --> ASDB
     US --> USDB
 
-    %% 経路の具体例
-    click AG "ユーザーからのリクエストはまずAPI Gatewayに到達します。"
-    click AS "認証関連のリクエストを処理します。"
-    click US "ユーザー関連のリクエストを処理します。"
-    click ASDB "認証情報のデータベースです。"
-    click USDB "ユーザー情報のデータベースです。"
-
     linkStyle 0 stroke:#333,stroke-width:2px,fill:none;
     linkStyle 1 stroke:#333,stroke-width:2px,fill:none;
     linkStyle 2 stroke:#333,stroke-width:2px,fill:none;
