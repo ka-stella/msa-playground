@@ -1,4 +1,4 @@
 include:
   - ./services/auth-service/compose.api.yaml
-  - ./services/user-service/compose.yaml
+  - ./services/user-service/compose.api.yaml
   - ./services/api-gateway/compose.api.yaml
