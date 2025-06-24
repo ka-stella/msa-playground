@@ -3,6 +3,7 @@ const { generateToken } = require('../utils/jwt');
 const { registerUser, findUserByUserName } = require('../services/authService');
 const { Prisma } = require('@prisma/client');
 const { PrismaClientKnownRequestError } = Prisma;
+const { publishUserCreatedEvent } = require('../services/eventPublisher');
 
 /**
  * ユーザ登録
@@ -17,6 +18,11 @@ async function register(req, res) {
     const passwordHash = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS));
     const newUser = await registerUser(username, passwordHash);
     console.log(`ユーザ登録処理成功 ユーザ名: ${newUser.username} (ID: ${newUser.id})`);
+    //kafkaイベント送信
+    await publishUserCreatedEvent({
+      id: newUser.id,
+      username: newUser.username,
+    });
     res.status(201).json({ message: 'ユーザ登録成功', userId: newUser.id });
   } catch (error) {
     // Prismaの既知のエラー

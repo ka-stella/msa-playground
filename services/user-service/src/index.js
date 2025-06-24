@@ -10,6 +10,10 @@ const YAML = require('yamljs');
 const path = require('path');
 const swaggerDocument = YAML.load(path.join(__dirname, '../swagger.yaml'));
 const corsOptions = require('./config/cors');
+const { startConsumer } = require('./kafka/consumer');
+
+//kafka 購読開始
+startConsumer();
 
 const isProduction = process.env.NODE_ENV === 'production';
 
