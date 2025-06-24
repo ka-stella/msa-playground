@@ -41,7 +41,7 @@ Kafka を使用して、auth-service（認証サービス）とuser-service（�
 | -- | --|
 | Kafka Broker | メッセージの中心ハブ |
 | Zookeeper | Kafkaのメタ情報管理 |
-| Kafka UI | Webベースの監視ツール（http://localhost:8081） |
+| Kafka UI | Webベースの監視ツール ([http://localhost:8081](http://localhost:8081)) |
 
 </br>
 </br>
