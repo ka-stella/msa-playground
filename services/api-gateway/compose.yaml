@@ -3,11 +3,10 @@ services:
     build: ./
     ports:
       - '8000:8000'
-      - '9228:9229' # デバッグポート
+      - '18000:9229' # デバッグポート
     volumes:
       - ./:/app
-    # command: npm run dev
-    command: node --inspect=0.0.0.0:9229 src/index.js #デバッグ用
+    command: npm run dev
     # depends_on:
     #   auth-service:
     #     condition: service_healthy

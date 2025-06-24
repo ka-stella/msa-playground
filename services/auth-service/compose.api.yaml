@@ -3,13 +3,13 @@ services:
     build: ./
     ports:
       - '3001:3001'
-      # - '9229:9229' # デバッグポート
     volumes:
       - ./:/app
     command: npm run dev
-    # command: node --inspect=0.0.0.0:9229 src/index.js #デバッグ用
     depends_on:
       db_auth_postgres:
+        condition: service_healthy
+      kafka:
         condition: service_healthy
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3001/health']

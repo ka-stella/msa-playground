@@ -6,8 +6,7 @@ services:
       - '18001:9229' # デバッグポート
     volumes:
       - ./:/app
-    # command: npm run dev
-    command: node --inspect=0.0.0.0:9229 src/index.js #デバッグ用
+    command: npm run dev
     depends_on:
       db_auth_postgres:
         condition: service_healthy

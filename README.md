@@ -30,6 +30,21 @@ graph LR
     linkStyle 3 stroke:#333,stroke-width:2px,fill:none;
     linkStyle 4 stroke:#333,stroke-width:2px,fill:none;
 ```
+</br>
+
+# サービス間の連携
+### 概要
+Kafka を使用して、auth-service（認証サービス）とuser-service（ユーザー管理サービス）間のデータ連携を非同期に行っています。
+
+### 使用構成
+| コンポーネント | 内容 |
+| -- | --|
+| Kafka Broker | メッセージの中心ハブ |
+| Zookeeper | Kafkaのメタ情報管理 |
+| Kafka UI | Webベースの監視ツール（http://localhost:8081） |
+
+</br>
+</br>
 
 
 # バックエンド起動
