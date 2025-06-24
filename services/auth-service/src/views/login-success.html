@@ -52,14 +52,14 @@
   <body>
     <div class="container">
       <h1>認証成功</h1>
-      <p>ダッシュボードにリダイレクトしています...</p>
+      <p>リダイレクトしています...</p>
       <div class="spinner"></div>
     </div>
     <script>
       const frontendBaseUrl = 'FRONTEND_URL_PLACEHOLDER';
 
       setTimeout(() => {
-        window.location.replace(frontendBaseUrl + '/#/dashboard');
+        window.location.replace(frontendBaseUrl + '/');
       }, 1500);
     </script>
   </body>
