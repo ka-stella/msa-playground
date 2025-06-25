@@ -1,105 +1,123 @@
 <template>
-  <div class="register">
-    <h1>ユーザー登録</h1>
-    <form @submit.prevent="register">
-      <div>
-        <label for="username">ユーザー名:</label>
-        <input type="text" id="username" v-model="username" required />
-      </div>
-      <div>
-        <label for="password">パスワード:</label>
-        <input type="password" id="password" v-model="password" required />
-      </div>
-      <button type="submit">登録</button>
-    </form>
-    <p v-if="message" :class="{ error: isError }">{{ message }}</p>
-  </div>
+  <v-container class="fill-height" fluid>
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="8" md="6" lg="4">
+        <v-card class="elevation-12">
+          <v-toolbar color="primary" dark flat>
+            <v-toolbar-title>新規ユーザー登録</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <v-form ref="registerForm">
+              <v-text-field
+                label="ユーザーID"
+                name="username"
+                prepend-icon="mdi-account-plus"
+                type="text"
+                v-model="username"
+                :rules="[(v) => !!v || 'ユーザーIDは必須です']"
+                required
+              ></v-text-field>
+
+              <v-text-field
+                label="パスワード"
+                name="password"
+                prepend-icon="mdi-lock"
+                type="password"
+                v-model="password"
+                :rules="[(v) => !!v || 'パスワードは必須です']"
+                required
+              ></v-text-field>
+            </v-form>
+
+            <v-btn
+              block
+              large
+              color="white"
+              class="login-btn black--text"
+              @click="register"
+            >
+              登録
+            </v-btn>
+
+            <v-divider class="my-4"></v-divider>
+
+            <v-card-text class="text-center pa-0">
+              すでにアカウントをお持ちですか？
+              <router-link to="/login" class="text-decoration-none"
+                >ログインはこちら</router-link
+              >
+            </v-card-text>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-snackbar
+      v-model="snackbar"
+      :color="isError ? 'error' : 'success'"
+      :timeout="3000"
+    >
+      {{ message }}
+      <template v-slot:actions>
+        <v-btn variant="text" @click="snackbar = false"> 閉じる </v-btn>
+      </template>
+    </v-snackbar>
+  </v-container>
 </template>
 
-<script>
-import axios from "axios";
+<script setup>
+import { authApi } from "@/api/auth";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
-export default {
-  name: "RegisterView",
-  setup() {
-    const username = ref("");
-    const password = ref("");
-    const message = ref("");
-    const isError = ref(false);
+const username = ref("");
+const password = ref("");
+const snackbar = ref(false);
+const message = ref("");
+const isError = ref("");
+const router = useRouter();
+const registerForm = ref(null);
 
-    // メソッド
-    const register = async () => {
-      try {
-        message.value = "登録処理中...";
-        isError.value = false;
+const register = async () => {
+  const { valid } = await registerForm.value.validate();
+  if (!valid) {
+    return;
+  }
 
-        const response = await axios.post(
-          `${process.env.VUE_APP_API_BASE_URL}/auth/register`,
-          {
-            username: username.value,
-            password: password.value,
-          }
-        );
-        message.value = response.data.message;
-        username.value = "";
-        password.value = "";
-      } catch (error) {
-        isError.value = true; // エラーフラグを立てる
-        message.value = error.response?.data?.message || "登録に失敗しました。";
-        console.error("登録エラー:", error);
-      }
-    };
+  try {
+    snackbar.value = false;
+    message.value = "登録処理中...";
+    isError.value = false;
 
-    // テンプレートで使用するデータとメソッドを返す
-    return {
-      username,
-      password,
-      message,
-      isError,
-      register,
-    };
-  },
+    const response = await authApi.resisterAuthUser(
+      username.value,
+      password.value
+    );
+
+    message.value = response.data.message;
+    snackbar.value = true;
+    username.value = "";
+    password.value = "";
+    router.push("/login");
+  } catch (error) {
+    isError.value = true;
+    snackbar.value = true;
+    if (error.response) {
+      message.value = error.response.data.message || "登録に失敗しました。";
+    } else {
+      message.value = "ネットワークエラーが発生しました。";
+    }
+    console.error("登録エラー:", error);
+  }
 };
 </script>
 
 <style scoped>
-/* スタイルは変更なし */
-.register {
-  margin-top: 50px;
+.login-btn {
+  background-color: #4285f4 !important; /* Google Blue */
+  color: white !important;
 }
-.register div {
-  margin-bottom: 10px;
-}
-.register label {
-  display: inline-block;
-  width: 100px;
-  text-align: right;
-  margin-right: 10px;
-}
-.register input[type="text"],
-.register input[type="password"] {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-.register button {
-  padding: 10px 20px;
-  background-color: #42b983;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-.register button:hover {
-  background-color: #368a65;
-}
-.register p {
-  margin-top: 20px;
-  color: green; /* 成功メッセージの色 */
-}
-.register p.error {
-  color: red; /* エラーメッセージの色 */
+
+.login-btn .v-icon {
+  margin-right: 8px;
 }
 </style>

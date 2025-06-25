@@ -1,35 +1,27 @@
 <template>
-  <nav>
-    <router-link to="/register">ユーザー登録</router-link> |
-    <router-link to="/login">ログイン</router-link>
-    <LogoutButton />
-  </nav>
-  <router-view />
+  <v-app>
+    <!-- ヘッダー -->
+    <AppHeader
+      @toggle-sidebar="drawer = !drawer"
+      v-if="!$route.meta.guestOnly"
+    />
+    <!-- サイドバー -->
+    <AppSidebar v-model:drawer="drawer" v-if="!$route.meta.guestOnly" />
+    <!-- メインコンテンツ -->
+    <v-main>
+      <v-container fluid>
+        <router-view></router-view>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script setup>
-import LogoutButton from "@/components/LogoutButton.vue";
+import { ref } from "vue";
+import AppHeader from "./components/AppHeader.vue";
+import AppSidebar from "./components/AppSidebar.vue";
+
+const drawer = ref(true);
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+<style scoped></style>
