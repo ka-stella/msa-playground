@@ -32,4 +32,19 @@ export const authApi = {
   checkAuthStatus: async () => {
     return await axiosClient.get("/auth/check");
   },
+
+  /**
+   * 認証ユーザ登録
+   * @param {string} username
+   * @param {string} password
+   */
+  resisterAuthUser: async (username, password) => {
+    return await axiosClient.post(
+      `${process.env.VUE_APP_API_BASE_URL}/auth/register`,
+      {
+        username: username,
+        password: password,
+      }
+    );
+  },
 };
