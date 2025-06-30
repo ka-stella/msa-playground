@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster
+FROM python:3.12-slim-bookworm
 
 # tesseract-ocr: Tesseract本体
 # tesseract-ocr-jpn: 日本語言語データ
@@ -25,16 +25,19 @@ COPY . .
 
 ARG UID=1000
 ARG GID=1000
+ARG USERNAME=appuser
 
 # UID・GID1000のユーザが存在しなければ作成
 RUN if ! grep -q "^[^:]*:[^:]*:${GID}:" /etc/group; then \
-      addgroup --gid ${GID} --system appuser; \
+      addgroup --gid ${GID} --system ${USERNAME}; \
     fi
 
 RUN if ! grep -q "^[^:]*:[^:]*:${UID}:" /etc/passwd; then \
-      adduser --uid ${UID} --system --ingroup appuser --no-create-home --disabled-password appuser; \
+      adduser --uid ${UID} --system --ingroup ${USERNAME} --home /home/${USERNAME} --disabled-password --shell /bin/bash ${USERNAME}; \
     fi
 
+# VS Code Serverがこのディレクトリにファイルを書き込むため
+RUN chown ${UID}:${GID} /home/${USERNAME}
 
 RUN chown -R ${UID}:${GID} /app
 
