@@ -1,23 +1,58 @@
-# 認証サービス
+# 概要
+
+認証機能を提供するマイクロサービスで、以下の機能を担当：
+
+- ユーザー認証（通常・ソーシャルログイン）
+- JWTトークンの発行・管理
+- 認証情報のセキュアな保存
+- 他サービスへのユーザー作成イベント通知
+
+### 認証フロー
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Auth
+    User->>Auth: ログイン
+    Auth->>Auth: 認証確認
+    Auth->>User: JWTをCookieで設定
+    Note right of Auth: httpOnly Cookie
+```
+
+### ユーザ作成フロー
+
+```mermaid
+sequenceDiagram
+    participant Frontend
+    participant APIGateway
+    participant AuthService
+    participant Kafka
+    participant UserService
+
+    Frontend->>AuthService: POST /auth/register
+    AuthService->>AuthService: ユーザー作成（AuthDB）
+    AuthService->>Kafka: ユーザー作成イベント発行
+    Kafka->>UserService: イベント消費
+    UserService->>UserService: ユーザー作成（UserDB）
+```
+
+### JWT検証フロー
+
+```mermaid
+sequenceDiagram
+    participant Frontend
+    participant Gateway
+    Frontend->>Gateway: リクエスト(Cookie)
+    alt 有効なJWT
+        Gateway->>Frontend: データ返却
+    else 無効
+        Gateway->>Frontend: エラー(401)
+    end
+```
 
 ## ソーシャルログイン
 
 [Google設定](https://console.cloud.google.com/apis/credentials?referrer=search&inv=1&invt=Ab0apA&project=sample-462705)
-
-## コンテナ起動停止
-
-```bash
-# 起動
-$ docker compose up -d
-# 停止
-$ docker compose down
-```
-
-### マイグレーション
-
-```bash
-$ docker compose exec auth-service npx prisma migrate dev
-```
 
 ## デバッグ
 
@@ -42,7 +77,7 @@ $ code .
 - Postmanなどのツールでhttp://localhost:3001 へリクエストを送信
 - ※VSCode拡張機能 REST Clientを使用する場合、テストファイルauth-service/test/api/test-auth.http
 
-### JWTの検証
+### JWTのテスト
 
 1. PostmanなどからHTTPリクエスト送信、レスポンスからJWTをコピー
 2. [このサイトで検証](https://jwt.io/)
