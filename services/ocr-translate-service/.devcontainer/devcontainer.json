@@ -1,0 +1,21 @@
+{
+    "name": "OCR Translate Service Dev",
+    "dockerComposeFile": "../compose.yaml",
+    "service": "ocr-translate-service",
+    "workspaceFolder": "/app",
+	"remoteUser": "appuser",
+    "containerUser": "appuser",
+	"remoteEnv": {
+        "VSCODE_SERVER_LOCATION": "/home/appuser/.vscode-server"
+    },
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-azuretools.vscode-docker",
+				"humao.rest-client"
+			]
+		}
+	},
+	"postCreateCommand": "pip install -r /app/requirements.txt"
+}

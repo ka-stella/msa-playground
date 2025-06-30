@@ -1,3 +1,14 @@
+# 概要
+このプロジェクトは、マイクロサービスアーキテクチャで構築されたプロジェクトです。認証・ユーザー管理・OCR処理の各機能が独立したサービスとして動作し、API Gatewayを介して統合されています。
+
+| サービス | 技術スタック | ポート |
+| -- | -- | -- |
+| Frontend | Vue + VueRouter + Vuetify | 8080 |
+| API Gateway | Node.js + Express + http-proxy-middleware | 8000 |
+| Auth Service | Node.js + Express + JWT + kafka| 3001 |
+| User Service | Node.js + Express + kafka | 3002 |
+| OCR-Translate Service |Flask + Pillow + PyTesseract |3003 |
+
 # アーキテクチャ構成図
 ```mermaid
 graph LR
@@ -9,6 +20,7 @@ graph LR
         AG(API Gateway: localhost:8000)
         AS(Auth Service: localhost:3001)
         US(User Service: localhost:3002)
+        OS(Other Service: localhost:xxxx)
     end
 
     subgraph データベースレイヤー
@@ -20,6 +32,7 @@ graph LR
 
     AG -- /auth/* --> AS
     AG -- /user/* --> US
+    AG -- /[other]/* --> OS
 
     AS --> ASDB
     US --> USDB
@@ -33,7 +46,6 @@ graph LR
 </br>
 
 # サービス間の連携
-### 概要
 Kafka を使用して、auth-service（認証サービス）とuser-service（ユーザー管理サービス）間のデータ連携を非同期に行っています。
 
 ### 使用構成
@@ -63,7 +75,7 @@ $ npm run serve
 http://localhost:8080/
 
 
-# マイグレーション
+# DBマイグレーション
 ```
 $ docker compose exec [service] npx prisma migrate dev
 $ docker compose exec [service] npx prisma generate

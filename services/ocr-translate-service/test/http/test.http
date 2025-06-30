@@ -1,0 +1,13 @@
+### 起動チェック
+GET http://localhost:3003/health
+
+### 画像をアップロード
+POST http://localhost:3003/extract
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="image.png"
+Content-Type: image/png
+
+< ./sample/image.png
+--WebAppBoundary--
