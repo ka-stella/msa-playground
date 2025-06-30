@@ -1,7 +1,7 @@
 {
-  "semi": false,           // 行末のセミコロンをつけない
-  "singleQuote": true,     // シングルクォートを使用する
-  "printWidth": 80,        // 1行の最大文字数
-  "tabWidth": 2,           // インデントの幅
-  "trailingComma": "es5"   // 複数行のリストで末尾にカンマをつける（ES5互換）
+  "semi": false,
+  "singleQuote": true,
+  "printWidth": 80,
+  "tabWidth": 2,
+  "trailingComma": "es5"
 }
