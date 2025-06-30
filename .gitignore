@@ -8,3 +8,6 @@ services/user-service/node_modules/
 .vscode/
 .idea/
 *.iml
+
+__pycache__/
+*.py[cod]

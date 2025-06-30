@@ -1,14 +1,13 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 /**
- * User Service のルーティング
- * '/user/*' のリクエストを User Service に転送
+ * ルーティング
  */
-const userServiceProxyMiddleware = createProxyMiddleware({
-  target: process.env.USER_SERVICE_URL || 'http://localhost:3002',
+const ocrTranslateServiceProxyMiddleware = createProxyMiddleware({
+  target: process.env.OCR_TRANSLATE_SERVICE_URL || 'http://localhost:3003',
   changeOrigin: true,
   pathRewrite: {
-    '^/user': '',
+    '^/ocrx': '',
   },
   onProxyReq: (proxyReq, req, res) => {
     console.log(
@@ -25,9 +24,9 @@ const userServiceProxyMiddleware = createProxyMiddleware({
     return proxyReq;
   },
   onError: (err, req, res, target) => {
-    console.error(`User Serviceへプロキシエラー: ${err.message}`);
-    res.status(500).json({ message: 'User Serviceに接続できません。' });
+    console.error(`Ocr Translate Serviceへプロキシエラー: ${err.message}`);
+    res.status(500).json({ message: 'Ocr Translate Serviceに接続できません。' });
   },
 });
 
-module.exports = userServiceProxyMiddleware;
+module.exports = ocrTranslateServiceProxyMiddleware;

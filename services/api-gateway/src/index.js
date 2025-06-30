@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const authMiddleware = require('./middlewares/authMiddleware');
 const authServiceProxyMiddleware = require('./middlewares/proxies/authServiceProxyMiddleware');
 const userServiceProxyMiddleware = require('./middlewares/proxies/userServiceProxyMiddleware');
+const ocrTranslateServiceProxyMiddleware = require('./middlewares/proxies/ocrTranslateServiceProxyMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -39,6 +40,7 @@ app.get('/auth/check', (req, res) => {
 //プロキシの設定
 app.use('/auth', authServiceProxyMiddleware);
 app.use('/user', userServiceProxyMiddleware);
+app.use('/ocrx', ocrTranslateServiceProxyMiddleware);
 
 /**
  * <attention>

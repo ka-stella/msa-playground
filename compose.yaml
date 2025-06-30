@@ -47,3 +47,4 @@ include:
   - ./services/auth-service/compose.api.yaml
   - ./services/user-service/compose.api.yaml
   - ./services/api-gateway/compose.api.yaml
+  - ./services/ocr-translate-service/compose.api.yaml
