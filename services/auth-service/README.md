@@ -109,3 +109,10 @@ Wed Jun 18 14:37:23 JST 2025
 2. リダイレクトを確認。Googleでログインと許可する
 3. [ここで](https://console.cloud.google.com/apis/credentials?referrer=search&inv=1&invt=Ab0apA&project=sample-462705) 設定した[callbackURL](http://localhost:3001/auth/google/callback) にリダイレクトすることを確認</br>
    ※callbackURLをAPI Gateway経由で設定している場合はapi-serviceを起動する必要あり
+
+# DBマイグレーション
+
+```
+$ docker compose exec auth-service npx prisma migrate dev
+$ docker compose exec auth-service npx prisma generate
+```

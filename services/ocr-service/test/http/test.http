@@ -11,3 +11,15 @@ Content-Type: image/png
 
 < ./sample/image.png
 --WebAppBoundary--
+
+
+### 画像をアップロード2
+POST http://localhost:3003/extract
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="image2.jpg"
+Content-Type: image/jpg
+
+< ./sample/image2.jpg
+--WebAppBoundary--

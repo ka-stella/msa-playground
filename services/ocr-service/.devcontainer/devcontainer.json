@@ -1,7 +1,7 @@
 {
-    "name": "OCR Translate Service Dev",
+    "name": "OCR Service Dev",
     "dockerComposeFile": "../compose.yaml",
-    "service": "ocr-translate-service",
+    "service": "ocr-service",
     "workspaceFolder": "/app",
 	"remoteUser": "appuser",
     "containerUser": "appuser",

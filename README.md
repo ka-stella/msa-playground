@@ -7,7 +7,7 @@
 | API Gateway | Node.js + Express + http-proxy-middleware | 8000 |
 | Auth Service | Node.js + Express + JWT + kafka| 3001 |
 | User Service | Node.js + Express + kafka | 3002 |
-| OCR-Translate Service |Flask + Pillow + PyTesseract |3003 |
+| OCR Service |Flask + Pillow + PyTesseract |3003 |
 
 # アーキテクチャ構成図
 ```mermaid
@@ -73,10 +73,3 @@ $ cd frontend
 $ npm run serve
 ```
 http://localhost:8080/
-
-
-# DBマイグレーション
-```
-$ docker compose exec [service] npx prisma migrate dev
-$ docker compose exec [service] npx prisma generate
-```
