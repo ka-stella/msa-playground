@@ -20,15 +20,15 @@ POSTエンドポイントを通して画像をアップロードし、Pillowで�
 sequenceDiagram
     participant Client
     participant Flask
-    participant Processor
+    participant OpenCV
     participant Tesseract
     
-    Client->>Flask: POST /api/ocr (画像ファイル)
-    Flask->>Processor: preprocess()
-    Processor->>Processor: ノイズ除去/傾き補正
-    Processor->>Tesseract: image_to_string()
-    Tesseract-->>Processor: 認識テキスト
-    Processor-->>Flask: 処理結果
+    Client->>Flask: POST (画像ファイル)
+    Flask->>OpenCV: preprocess_image()
+    OpenCV->>OpenCV: ノイズ除去/補正
+    OpenCV->>Tesseract: extract_text_from_image()
+    Tesseract-->>OpenCV: 認識テキスト
+    OpenCV-->>Flask: 処理結果
     Flask-->>Client: JSON応答
 ```
 
