@@ -13,6 +13,12 @@ RUN apt-get update && apt-get install -y \
     libleptonica-dev \
     poppler-utils \
     fontconfig \
+    # OpenCV依存ライブラリ
+    libopencv-dev \
+    python3-opencv \
+    # 画像処理補助ツール
+    imagemagick \
+    ghostscript \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 

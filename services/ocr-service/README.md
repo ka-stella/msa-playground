@@ -1,5 +1,5 @@
 # 概要
-POSTエンドポイントを通して画像をアップロードし、Pillowで読み込み、PyTesseractラッパー（OCRエンジンのTesseract）を使用して処理するFlaskアプリケーション。
+POSTエンドポイントを通して画像をアップロードし、Pillowで読み込み、PyTesseractを使用して画像からテキストを抽出するFlaskアプリケーション。
 抽出したテキストは、リクエストに対するレスポンスとして返す。
 
 主な機能:
@@ -14,6 +14,23 @@ POSTエンドポイントを通して画像をアップロードし、Pillowで�
 - **Pillow (PIL Fork)** - 画像処理ライブラリ
 - **PyTesseract** - Tesseract OCRのPythonラッパー
 - **Tesseract OCR** - オープンソースOCRエンジン
+
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Flask
+    participant Processor
+    participant Tesseract
+    
+    Client->>Flask: POST /api/ocr (画像ファイル)
+    Flask->>Processor: preprocess()
+    Processor->>Processor: ノイズ除去/傾き補正
+    Processor->>Tesseract: image_to_string()
+    Tesseract-->>Processor: 認識テキスト
+    Processor-->>Flask: 処理結果
+    Flask-->>Client: JSON応答
+```
 
 
 ### 開発環境（Dev Containersを使用）

@@ -1,7 +1,7 @@
 ### 起動チェック
 GET http://localhost:3003/health
 
-### 画像をアップロード
+### テキスト抽出1
 POST http://localhost:3003/extract
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
@@ -13,7 +13,7 @@ Content-Type: image/png
 --WebAppBoundary--
 
 
-### 画像をアップロード2
+### 画像テキスト抽出2(手書き)
 POST http://localhost:3003/extract
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
@@ -22,4 +22,26 @@ Content-Disposition: form-data; name="file"; filename="image2.jpg"
 Content-Type: image/jpg
 
 < ./sample/image2.jpg
+--WebAppBoundary--
+
+### テキスト抽出(ライト画像)
+POST http://localhost:3003/extract
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="light.png"
+Content-Type: image/png
+
+< ./sample/light.png
+--WebAppBoundary--
+
+### テキスト抽出（ダーク画像）
+POST http://localhost:3003/extract
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="dark.png"
+Content-Type: image/png
+
+< ./sample/dark.png
 --WebAppBoundary--

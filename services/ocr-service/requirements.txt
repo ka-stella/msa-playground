@@ -1,4 +1,20 @@
-Flask
-Pillow
-pytesseract
-python-dotenv
+# OCRコア
+Pillow==11.2.1
+pytesseract==0.3.13
+
+# 画像前処理
+opencv-python-headless==4.9.0.80
+numpy==1.26.0
+scikit-image==0.22.0
+
+# PDF処理
+pypdf2==3.0.1
+pdf2image==1.16.3
+
+# 補助ツール
+requests==2.31.0
+python-dotenv==1.1.1
+
+# Flask関連
+flask==3.1.1
+gunicorn==21.2.0
