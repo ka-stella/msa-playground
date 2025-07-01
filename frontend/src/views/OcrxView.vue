@@ -151,7 +151,8 @@ const uploadImage = async () => {
 
     const response = await ocrxApi.extract(formData);
     if (response.data && response.data.extracted_text) {
-      extractedText.value = response.data.extractedText;
+      console.log(response.data);
+      extractedText.value = response.data.extracted_text;
     } else {
       extractedText.value =
         "文字の抽出に成功しましたが、抽出されたテキストが見つかりません。";
