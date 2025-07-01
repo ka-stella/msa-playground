@@ -4,7 +4,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
  * ルーティング
  */
 const ocrTranslateServiceProxyMiddleware = createProxyMiddleware({
-  target: process.env.OCR_TRANSLATE_SERVICE_URL || 'http://localhost:3003',
+  target: process.env.OCR_SERVICE_URL || 'http://localhost:3003',
   changeOrigin: true,
   pathRewrite: {
     '^/ocrx': '',
