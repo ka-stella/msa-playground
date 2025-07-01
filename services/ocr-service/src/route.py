@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, json, request, jsonify, current_app
 from ocr.processor import run_ocr
 from ocr.opencv_handler import pil_to_cv2
 from utils.file_handler import get_upload_image
@@ -14,20 +14,41 @@ def ocr_image():
     """
     画像を受け取り、OCRを実行してテキストを返す
     """
+    # リクエスト処理
     image, error = get_upload_image()
 
     if error:
-        return jsonify({"message": error}), 400
-    
-    # 言語はとりあえず固定
-    ocr_lang = 'jpn+eng'
+        return jsonify({"success": False, "error": error}), 400
+
+    try:
+        regions_json = request.form.get('regions')
+        if not regions_json:
+            return jsonify({"success": False, "error": "regionsパラメータが指定されていません"}), 400
+            
+        regions = json.loads(regions_json)
+    except json.JSONDecodeError:
+        return jsonify({"success": False, "error": "regionsのJSON形式が不正です"}), 400
+
+    # OCR言語設定 (デフォルト:日本語+英語)
+    ocr_lang = request.form.get('lang', 'jpn+eng')
 
     # OpenCV形式に変換
     cv_image = pil_to_cv2(image)
 
-    extracted_text = run_ocr(cv_image, lang=ocr_lang)
+    results = {}
+    for region in regions:
+        label = region.get("label", "unknown")
+        x, y, w, h = region["x"], region["y"], region["width"], region["height"]
 
-    if extracted_text is None:
-        return jsonify({"message": "OCRが実行できませんでした。画像形式または内容を確認してください。"}), 500
-    
-    return jsonify({"message": "抽出成功", "extracted_text": extracted_text}), 200
+        # トリミング
+        cropped = cv_image[y:y+h, x:x+w] 
+
+        # テキスト抽出
+        extracted_text = run_ocr(cropped, lang=ocr_lang)
+        results[label] = extracted_text
+
+        return jsonify({
+            "success": True,
+            "data": results,
+            "message": "テキスト抽出が完了しました"
+        }), 200

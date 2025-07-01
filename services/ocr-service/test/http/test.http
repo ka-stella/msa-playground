@@ -1,47 +1,26 @@
 ### 起動チェック
 GET http://localhost:3003/health
 
-### テキスト抽出1
+### テキスト抽出（カスタム言語指定）
 POST http://localhost:3003/extract
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
-Content-Disposition: form-data; name="file"; filename="image.png"
+Content-Disposition: form-data; name="file"; filename="seikyu.png"
 Content-Type: image/png
 
-< ./sample/image.png
---WebAppBoundary--
-
-
-### 画像テキスト抽出2(手書き)
-POST http://localhost:3003/extract
-Content-Type: multipart/form-data; boundary=WebAppBoundary
-
+< ./sample/seikyu.png
 --WebAppBoundary
-Content-Disposition: form-data; name="file"; filename="image2.jpg"
-Content-Type: image/jpg
+Content-Disposition: form-data; name="regions"
+Content-Type: application/json
 
-< ./sample/image2.jpg
---WebAppBoundary--
-
-### テキスト抽出(ライト画像)
-POST http://localhost:3003/extract
-Content-Type: multipart/form-data; boundary=WebAppBoundary
-
+[
+     { "label": "No", "x": 620, "y": 80, "width": 165, "height": 25 },
+     { "label": "請求日", "x": 620, "y": 100, "width": 165, "height": 25 }
+]
 --WebAppBoundary
-Content-Disposition: form-data; name="file"; filename="light.png"
-Content-Type: image/png
+Content-Disposition: form-data; name="lang"
+Content-Type: text/plain
 
-< ./sample/light.png
---WebAppBoundary--
-
-### テキスト抽出（ダーク画像）
-POST http://localhost:3003/extract
-Content-Type: multipart/form-data; boundary=WebAppBoundary
-
---WebAppBoundary
-Content-Disposition: form-data; name="file"; filename="dark.png"
-Content-Type: image/png
-
-< ./sample/dark.png
+jpn
 --WebAppBoundary--
