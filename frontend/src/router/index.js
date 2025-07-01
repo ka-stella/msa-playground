@@ -3,7 +3,7 @@ import { authApi } from "@/api/auth";
 import RegisterView from "../views/RegisterView.vue";
 import LoginView from "../views/LoginView.vue";
 import HomeView from "../views/HomeView.vue";
-import DashboardView from "../views/DashboardView.vue";
+import OcrxView from "@/views/OcrxView.vue";
 
 const routes = [
   {
@@ -25,9 +25,9 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/dashboard",
-    name: "dashboard",
-    component: DashboardView,
+    path: "/ocrx",
+    name: "ocrx",
+    component: OcrxView,
     meta: { requiresAuth: true },
   },
 ];

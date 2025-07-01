@@ -10,9 +10,9 @@
         <v-list-item-title>ホーム</v-list-item-title>
       </v-list-item>
 
-      <v-list-item to="/a" link>
-        <v-list-item-icon><v-icon>mdi-bookmark</v-icon></v-list-item-icon>
-        <v-list-item-title>page1</v-list-item-title>
+      <v-list-item to="/ocrx" link>
+        <v-list-item-icon><v-icon>mdi-scanner</v-icon></v-list-item-icon>
+        <v-list-item-title>画像から文字を抽出</v-list-item-title>
       </v-list-item>
 
       <v-list-item to="/b" link>
