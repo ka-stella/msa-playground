@@ -30,25 +30,41 @@ def ocr_image():
         return jsonify({"success": False, "error": "regionsのJSON形式が不正です"}), 400
 
     # OCR言語設定 (デフォルト:日本語+英語)
-    ocr_lang = request.form.get('lang', 'jpn+eng')
+    ocr_lang = request.form.get('lang', 'jpn')
 
-    # OpenCV形式に変換
-    cv_image = pil_to_cv2(image)
+    try:
+        # OpenCV形式に変換
+        cv_image = pil_to_cv2(image)
+    except Exception as e:
+        return jsonify({"success": False, "error": f"画像の変換中にエラーが発生しました: {str(e)}"}), 500
 
     results = {}
     for region in regions:
         label = region.get("label", "unknown")
-        x, y, w, h = region["x"], region["y"], region["width"], region["height"]
 
-        # トリミング
-        cropped = cv_image[y:y+h, x:x+w] 
+        x = int(round(region["x"]))
+        y = int(round(region["y"]))
+        w = int(round(region["width"]))
+        h = int(round(region["height"]))
 
-        # テキスト抽出
-        extracted_text = run_ocr(cropped, lang=ocr_lang)
-        results[label] = extracted_text
+        try:
+            # トリミング
+            cropped = cv_image[y:y+h, x:x+w] 
 
-        return jsonify({
-            "success": True,
-            "data": results,
-            "message": "テキスト抽出が完了しました"
-        }), 200
+            # テキスト抽出
+            extracted_text = run_ocr(cropped, lang=ocr_lang)
+            results[label] = extracted_text
+
+            current_app.logger.debug(f"extracted_text: {extracted_text}")
+        except Exception as e:
+            return jsonify({
+                "success": False, 
+                "message": f"領域 '{label}' のOCR処理中にエラーが発生しました: {str(e)}"
+            }), 500
+
+    current_app.logger.debug(f"success extracted text: {results}")
+    return jsonify({
+        "success": True,
+        "data": results,
+        "message": "テキスト抽出が完了しました"
+    }), 200
