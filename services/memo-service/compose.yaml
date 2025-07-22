@@ -1,0 +1,36 @@
+services:
+  # memo-service:
+  #   build: ./
+  #   ports:
+  #     - '3004:3004'
+  #   volumes:
+  #     - ./:/app
+  #   command: npm run dev
+  #   depends_on:
+  #     db_auth_postgres:
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test: ['CMD', 'curl', '-f', 'http://localhost:3001/health']
+  #     interval: 10s
+  #     timeout: 10s
+  #     retries: 5
+
+  db_memo_postgres:
+    image: postgres:16-alpine
+    container_name: sample_memo_postgres
+    environment:
+      POSTGRES_DB: memo_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - '15004:5432'
+    volumes:
+      - memo_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U user -d memo_db']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  memo_postgres_data:
