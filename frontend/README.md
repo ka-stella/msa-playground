@@ -13,6 +13,10 @@
 ## OCR
 <img src="https://github.com/user-attachments/assets/55347c4e-66db-4dce-9aa9-7e6830f39327" width="600" />
 
+## メモリスト
+<img src="https://github.com/user-attachments/assets/29befcc4-71af-4d5f-9e89-672bbe37deda" width="600">
+
+
 
 # 起動
 ```bash
