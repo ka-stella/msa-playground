@@ -10,7 +10,7 @@ import { Client } from "@stomp/stompjs";
 let stompClient = null;
 
 onMounted(() => {
-  const socket = new SockJS("http://localhost:8000/memo"); // ← API Gateway 経由
+  const socket = new SockJS(`${process.env.VUE_APP_API_BASE_URL}/memo`);
   const stompClient = new Client({
     webSocketFactory: () => socket,
     debug: (str) => console.log(str),

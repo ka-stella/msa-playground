@@ -51,16 +51,6 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-snackbar
-      v-model="snackbar"
-      :color="isError ? 'error' : 'success'"
-      :timeout="3000"
-    >
-      {{ message }}
-      <template v-slot:actions>
-        <v-btn variant="text" @click="snackbar = false"> 閉じる </v-btn>
-      </template>
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -68,14 +58,13 @@
 import { authApi } from "@/api/auth";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useSnackbar } from "@/composables/useSnackbar";
 
 const username = ref("");
 const password = ref("");
-const snackbar = ref(false);
-const message = ref("");
-const isError = ref("");
 const router = useRouter();
 const registerForm = ref(null);
+const { showSnackbar } = useSnackbar();
 
 const register = async () => {
   const { valid } = await registerForm.value.validate();
@@ -84,27 +73,23 @@ const register = async () => {
   }
 
   try {
-    snackbar.value = false;
-    message.value = "登録処理中...";
-    isError.value = false;
+    showSnackbar("登録処理中...");
 
     const response = await authApi.resisterAuthUser(
       username.value,
       password.value
     );
 
-    message.value = response.data.message;
-    snackbar.value = true;
+    showSnackbar(response.data.message);
+
     username.value = "";
     password.value = "";
     router.push("/login");
   } catch (error) {
-    isError.value = true;
-    snackbar.value = true;
     if (error.response) {
-      message.value = error.response.data.message || "登録に失敗しました。";
+      showSnackbar(error.response.data.message || "登録に失敗しました。", true);
     } else {
-      message.value = "ネットワークエラーが発生しました。";
+      showSnackbar("ネットワークエラーが発生しました。", true);
     }
     console.error("登録エラー:", error);
   }

@@ -13,6 +13,7 @@
         <router-view></router-view>
       </v-container>
     </v-main>
+    <Global-snackbar />
   </v-app>
 </template>
 
@@ -20,6 +21,7 @@
 import { ref } from "vue";
 import AppHeader from "./components/AppHeader.vue";
 import AppSidebar from "./components/AppSidebar.vue";
+import GlobalSnackbar from "./components/GlobalSnackbar.vue";
 
 const drawer = ref(true);
 </script>

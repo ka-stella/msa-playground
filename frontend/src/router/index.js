@@ -5,6 +5,7 @@ import LoginView from "../views/LoginView.vue";
 import HomeView from "../views/HomeView.vue";
 import OcrxView from "@/views/OcrxView.vue";
 import MemoView from "@/views/MemoView.vue";
+import MemoListView from "@/views/MemoListView.vue";
 
 const routes = [
   {
@@ -29,6 +30,12 @@ const routes = [
     path: "/ocrx",
     name: "ocrx",
     component: OcrxView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/memo-list",
+    name: "memo-list",
+    component: MemoListView,
     meta: { requiresAuth: true },
   },
   {
