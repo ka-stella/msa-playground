@@ -10,3 +10,5 @@ WebSocket(STOMP) を活用することで、複数のユーザー間でメモの
 - **Java 17** - メインプログラミング言語
 - **Spring Boot 3.5.3** - Webアプリケーションフレームワーク
 - **Spring WebSocket (STOMP)** - Spring Bootに統合されたWebSocket機能
+- **Gradle** - ビルドツール
+- **ドメイン駆動設計 (DDD)** - レイヤードアーキテクチャ
