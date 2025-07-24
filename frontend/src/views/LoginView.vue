@@ -59,17 +59,6 @@
         </div>
       </v-col>
     </v-row>
-
-    <v-snackbar
-      v-model="snackbar"
-      :color="isError ? 'error' : 'success'"
-      :timeout="3000"
-    >
-      {{ message }}
-      <template v-slot:actions>
-        <v-btn variant="text" @click="snackbar = false"> 閉じる </v-btn>
-      </template>
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -77,14 +66,13 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { authApi } from "@/api/auth";
+import { useSnackbar } from "@/composables/useSnackbar";
 
 const username = ref("");
 const password = ref("");
-const snackbar = ref(false);
-const message = ref("");
-const isError = ref("");
 const router = useRouter();
 const loginForm = ref(null);
+const { showSnackbar } = useSnackbar();
 
 const login = async () => {
   // フォームのバリデーション
@@ -94,25 +82,23 @@ const login = async () => {
   }
 
   try {
-    snackbar.value = false;
-    message.value = "ログイン処理中...";
-    isError.value = false;
+    showSnackbar("ログイン処理中...");
 
     const response = await authApi.login(username.value, password.value);
 
-    message.value = response.data.message;
-    snackbar.value = true;
+    showSnackbar(response.data.message);
     username.value = "";
     password.value = "";
 
     router.push("/");
   } catch (error) {
-    isError.value = true;
-    snackbar.value = true;
     if (error.response) {
-      message.value = error.response.data.message || "ログインに失敗しました。";
+      showSnackbar(
+        error.response.data.message || "ログインに失敗しました。",
+        true
+      );
     } else {
-      message.value = "ネットワークエラーが発生しました。";
+      showSnackbar("ネットワークエラーが発生しました。", true, 1000);
     }
   }
 
@@ -127,13 +113,6 @@ const loginWithGoogle = (media) => {
 </script>
 
 <style scoped>
-/* .fill-height {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
-
 .login-btn {
   background-color: #4285f4 !important; /* Google Blue */
   color: white !important;

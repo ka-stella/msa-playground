@@ -29,6 +29,12 @@ const authMiddleware = (req, res, next) => {
     return res.status(401).json({ message: '認証トークンがありません。ログインしてください' });
   }
 
+  if (req.user) {
+    proxyReq.headers['X-User-Id'] = req.user.id;
+    proxyReq.headers['X-User-Role'] = req.user.role;
+    console.log(`Proxyヘッダーにユーザ情報を追加: ID=${req.user.id}, ROLE=${req.user.role}`);
+  }
+
   try {
     const decoded = jwt.verify(jwtCookie, process.env.JWT_SECRET);
     req.user = decoded;

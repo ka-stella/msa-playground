@@ -15,14 +15,14 @@
         <v-list-item-title>画像から文字を抽出</v-list-item-title>
       </v-list-item>
 
-      <v-list-item to="/b" link>
-        <v-list-item-icon><v-icon>mdi-star</v-icon></v-list-item-icon>
-        <v-list-item-title>page2</v-list-item-title>
+      <v-list-item to="/memo-list" link>
+        <v-list-item-icon><v-icon>mdi-note</v-icon></v-list-item-icon>
+        <v-list-item-title>メモ</v-list-item-title>
       </v-list-item>
 
-      <v-list-item to="/c" link>
-        <v-list-item-icon><v-icon>mdi-account</v-icon></v-list-item-icon>
-        <v-list-item-title>プロフィール</v-list-item-title>
+      <v-list-item to="/memo" link>
+        <v-list-item-icon><v-icon>mdi-note</v-icon></v-list-item-icon>
+        <v-list-item-title>メモ test</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
