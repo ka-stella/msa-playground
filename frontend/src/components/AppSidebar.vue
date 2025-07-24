@@ -15,9 +15,9 @@
         <v-list-item-title>画像から文字を抽出</v-list-item-title>
       </v-list-item>
 
-      <v-list-item to="/b" link>
-        <v-list-item-icon><v-icon>mdi-star</v-icon></v-list-item-icon>
-        <v-list-item-title>page2</v-list-item-title>
+      <v-list-item to="/memo" link>
+        <v-list-item-icon><v-icon>mdi-note</v-icon></v-list-item-icon>
+        <v-list-item-title>メモ</v-list-item-title>
       </v-list-item>
 
       <v-list-item to="/c" link>

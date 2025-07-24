@@ -1,13 +1,11 @@
 require('dotenv').config();
 
 const express = require('express');
+const http = require('http');
 const corsOptions = require('./config/cors');
 const cookieParser = require('cookie-parser');
 const authMiddleware = require('./middlewares/authMiddleware');
-const authServiceProxyMiddleware = require('./middlewares/proxies/authServiceProxyMiddleware');
-const userServiceProxyMiddleware = require('./middlewares/proxies/userServiceProxyMiddleware');
-const ocrTranslateServiceProxyMiddleware = require('./middlewares/proxies/ocrTranslateServiceProxyMiddleware');
-
+const proxy = require('./middlewares/proxies/proxy');
 const app = express();
 const PORT = process.env.PORT || 8000;
 const isProduction = process.env.NODE_ENV === 'production';
@@ -38,14 +36,15 @@ app.get('/auth/check', (req, res) => {
 });
 
 //プロキシの設定
-app.use('/auth', authServiceProxyMiddleware);
-app.use('/user', userServiceProxyMiddleware);
-app.use('/ocrx', ocrTranslateServiceProxyMiddleware);
+app.use('/auth', proxy.authServiceProxyMiddleware);
+app.use('/user', proxy.userServiceProxyMiddleware);
+app.use('/ocrx', proxy.ocrxServiceProxyMiddleware);
+app.use('/memo', proxy.httpMemoServiceProxyMiddleware);
 
 /**
  * <attention>
- * express.json()が先にbodyを読み込んでしまうと、
- * proxyはbodyを送れずrequest abortedになる
+ * プロキシでヘッダー装飾をいじっているので
+ * プロキシより後ろにする必要がある
  */
 app.use(express.json());
 
@@ -63,6 +62,13 @@ app.post('/logout', (req, res) => {
   res.status(200).json({ message: 'ログアウトしました。' });
 });
 
-app.listen(PORT, () => {
+const server = http.createServer(app);
+server.on('upgrade', (req, socket, head) => {
+  if (req.url.startsWith('/memo')) {
+    proxy.wsMemoServiceProxyMiddleware.upgrade(req, socket, head);
+  }
+});
+
+server.listen(8000, () => {
   console.log(`API Gateway running on port ${PORT}`);
 });

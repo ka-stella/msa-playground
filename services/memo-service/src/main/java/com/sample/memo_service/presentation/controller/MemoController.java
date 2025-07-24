@@ -15,12 +15,18 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class MemoController {
     private final MemoService memoService;
 
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("Memo Service is healthy!");
+    }
+    
     @GetMapping("/")
     public ResponseEntity<List<MemoResponse>> getAllMemos(){
         List<Memo> memos = memoService.getAllMemos();

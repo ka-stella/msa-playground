@@ -5,7 +5,7 @@ services:
       - '8000:8000'
     volumes:
       - ./:/app
-    command: npm run dev
+    command: npm run dev:no-debug
     depends_on:
       auth-service:
         condition: service_healthy
