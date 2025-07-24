@@ -3,17 +3,19 @@
 
 | サービス | 技術スタック | ポート |
 | -- | -- | -- |
-| Frontend | Vue + VueRouter + Vuetify | 8080 |
+| Frontend | Vue + VueRouter + Vuetify + SockJS | 8080 |
 | API Gateway | Node.js + Express + http-proxy-middleware | 8000 |
 | Auth Service | Node.js + Express + JWT + kafka| 3001 |
 | User Service | Node.js + Express + kafka | 3002 |
 | OCR Service |Flask + Pillow + PyTesseract |3003 |
+| Memo Service |Spring Boot + Spring WebSocket | 3004 |
 
 * [Frontendの概要](./frontend/README.md)
 * [API Gatewayの概要](./services/api-gateway/README.md)
 * [Auth Serviceの概要](./services/auth-service/README.md)
 * [User Serviceの概要](./services/user-service/README.md)
 * [OCR Serviceの概要](./services/ocr-service/README.md)
+* [MEMO Serviceの概要](./services/memo-service/README.md)
 
 # アーキテクチャ構成図
 ```mermaid
@@ -63,19 +65,3 @@ Kafka を使用して、auth-service（認証サービス）とuser-service（�
 
 </br>
 </br>
-
-
-# バックエンド起動
-```
-$ make up
-```
-## Swagger UI
-- [Auth Service](http://localhost:3001/api-docs/)
-- [User Service](http://localhost:3002/api-docs/)
-
-# フロントエンド起動
-```
-$ cd frontend
-$ npm run serve
-```
-http://localhost:8080/
