@@ -1,6 +1,6 @@
 # 概要
 このプロジェクトは、フロントエンドと複数のバックエンドサービス間の通信を仲介するAPI Gatewayです。
-Expressとhttp-proxy-middlewareを使用し、リクエストのルーティング、WebSocketプロキシ、そして一元的な認証処理を提供します。
+Expressとhttp-proxy-middlewareを使用し、HTTPとWebSocketをプロキシ、そして一元的な認証処理を提供します。
 
 主な機能:
 - **ルーティング** - フロントエンドからのリクエストを、```auth```, ```user```, ```ocrx```, ```memo``` といったパスに応じて各バックエンドサービスへ振り分けます。
