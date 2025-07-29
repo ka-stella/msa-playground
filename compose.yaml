@@ -48,3 +48,4 @@ include:
   - ./services/user-service/compose.api.yaml
   - ./services/api-gateway/compose.api.yaml
   - ./services/ocr-service/compose.api.yaml
+  - ./services/memo-service/compose.yaml
