@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <v-container>
     <v-card class="pa-4" v-if="memo">
       <v-text-field
@@ -56,51 +56,77 @@
   </v-container>
 </template>
 
+<script setup></script>
+
+<style lang="css" scoped></style> -->
+
+<template>
+  <v-container>
+    <v-card class="mb-4" :loading="isSyncing">
+      <v-card-title>
+        メモ編集（ID: {{ memoId }}）
+        <v-chip
+          class="ml-auto"
+          :color="syncStatus === 'connected' ? 'success' : 'error'"
+          label
+          small
+        >
+          {{ syncStatus === "connected" ? "同期中" : "オフライン" }}
+        </v-chip>
+      </v-card-title>
+      <v-card-text>
+        <v-text-field
+          v-model="memoTitle"
+          label="タイトル"
+          outlined
+          dense
+        ></v-text-field>
+        <v-textarea
+          v-model="memoContent"
+          label="内容"
+          outlined
+          dense
+          rows="10"
+        ></v-textarea>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" @click="handleSaveMemo" :loading="isSyncing"
+          >メモを保存</v-btn
+        >
+        <v-btn color="secondary" @click="loadMemo" :loading="isSyncing"
+          >最新をロード</v-btn
+        >
+        <v-spacer></v-spacer>
+        <v-btn text @click="$router.back()">一覧に戻る</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-container>
+</template>
+
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
-import { useMemo } from "@/composables/useMemo";
-import { useSnackbar } from "@/composables/useSnackbar";
+import { useRealtimeMemo } from "@/composables/useRealtimeMemo";
+import { ref, watch } from "vue";
 
-const { showSnackbar } = useSnackbar();
-const {
-  initializeWebSocket,
-  deactivateWebSocket,
-  fetchMemoId,
-  memo,
-  loading,
-  updateMemo,
-} = useMemo();
 const route = useRoute();
-const memoId = route.params.id;
+const memoId = ref(route.params.id);
 
-// 共同編集者リスト（ダミーデータ）
-const editingUsers = ref([
-  { id: 1, name: "山田" },
-  { id: 2, name: "佐藤" },
-]);
+const { memoTitle, memoContent, isSyncing, syncStatus, loadMemo, saveMemo } =
+  useRealtimeMemo(memoId);
 
-const isSaving = ref(false);
-const saveMemo = () => {
-  isSaving.value = true;
-  try {
-    updateMemo();
-    showSnackbar("保存しました。", false);
-  } catch (e) {
-    showSnackbar("保存に失敗しました。", true);
-  } finally {
-    isSaving.value = false;
+watch(
+  () => route.params.id,
+  (newId) => {
+    memoId.value = newId;
+  }
+);
+
+const handleSaveMemo = async () => {
+  const success = await saveMemo();
+  if (success) {
+    alert("メモが保存されました！");
+  } else {
+    alert("メモの保存に失敗しました。");
   }
 };
-
-onMounted(() => {
-  fetchMemoId.value = memoId;
-  initializeWebSocket();
-});
-
-onUnmounted(() => {
-  deactivateWebSocket();
-});
 </script>
-
-<style lang="css" scoped></style>

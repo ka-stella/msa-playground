@@ -44,8 +44,9 @@ services:
         condition: service_healthy
 
 include:
-  - ./services/auth-service/compose.api.yaml
-  - ./services/user-service/compose.api.yaml
-  - ./services/api-gateway/compose.api.yaml
-  - ./services/ocr-service/compose.api.yaml
-  - ./services/memo-service/compose.yaml
+  - ./services/auth-service/compose.app.yaml
+  - ./services/user-service/compose.app.yaml
+  - ./services/api-gateway/compose.app.yaml
+  - ./services/ocr-service/compose.app.yaml
+  - ./services/memo-service/compose.app.yaml
+  - ./services/yjs-sync-service/compose.app.yaml

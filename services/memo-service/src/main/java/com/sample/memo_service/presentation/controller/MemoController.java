@@ -37,7 +37,7 @@ public class MemoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MemoResponse> getMemoById(@PathVariable UUID id){
+    public ResponseEntity<MemoResponse> getMemoById(@PathVariable("id") UUID id){
         return memoService.getMemoById(id)
                 .map(memo -> new ResponseEntity<>(new MemoResponse(memo), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -50,20 +50,20 @@ public class MemoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MemoResponse> updateMemo(@PathVariable UUID id, @RequestBody MemoRequest request){
+    public ResponseEntity<MemoResponse> updateMemo(@PathVariable("id") UUID id, @RequestBody MemoRequest request){
         return memoService.updateMemo(id, request.getTitle(), request.getContent())
                 .map(updatedMemo -> new ResponseEntity<>(new MemoResponse(updatedMemo),HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMemo(@PathVariable UUID id){
+    public ResponseEntity<Void> deleteMemo(@PathVariable("id") UUID id){
         memoService.deleteMemo(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/{id}/histories")
-    public ResponseEntity<List<History>> getHistories(@PathVariable UUID id){
+    public ResponseEntity<List<History>> getHistories(@PathVariable("id") UUID id){
         List<History> histories = memoService.getHistories(id);
         if(histories.isEmpty()){
             return ResponseEntity.notFound().build();

@@ -1,6 +1,6 @@
 module.exports = {
   auth: {
-    target: process.env.AUTH_SERVICE_URL || 'http://auth-service:3001',
+    target: process.env.AUTH_SERVICE_URL || 'http://localhost:3001',
     pathRewrite: { '^/auth': '' },
   },
   user: {
@@ -11,13 +11,24 @@ module.exports = {
     target: process.env.OCR_SERVICE_URL || 'http://localhost:3003',
     pathRewrite: { '^/ocrx': '' },
   },
-  memoHttp: {
+  memo: {
     target: process.env.MEMO_SERVICE_URL || 'http://localhost:3004',
     pathRewrite: { '^/memo': '' },
   },
-  memoWs: {
-    target: (process.env.MEMO_SERVICE_URL || 'http://localhost:3004').replace(/^http/, 'ws'),
+  ySync: {
+    target: process.env.YJS_SYNC_SERVICE_URL || 'http://localhost:3005',
     ws: true,
-    pathRewrite: { '^/memo': '' },
+    onProxyReqWs: (proxyReq, req, socket, options, head) => {
+      console.log('WebSocketプロキシリクエスト');
+    },
+    onOpen: proxySocket => {
+      console.log('WebSocket接続オープン');
+    },
+    onClose: proxySocket => {
+      console.log('WebSocket接続クローズ');
+    },
+    onError: (err, req, res) => {
+      console.error('Yjs Sync Service WebSocketプロキシエラー:', err);
+    },
   },
 };

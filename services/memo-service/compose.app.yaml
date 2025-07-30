@@ -6,7 +6,7 @@ services:
       - '35729:35729' # DevToolsのライブリロードポート
     volumes:
       - ./:/app
-      - /app/build # バインドマウントから除外（パフォーマンス向上）
+      # - /app/build
     command: sh -c "./gradlew bootRun --no-daemon --continuous"
     depends_on:
       db_memo_postgres:
@@ -14,8 +14,6 @@ services:
     environment:
       SPRING_DEVTOOLS_LIVERELOAD_ENABLED: "true"
       SPRING_DEVTOOLS_RESTART_ENABLED: "true"
-      SPRING_DEVTOOLS_RESTART_POLL_INTERVAL: "1s"
-      SPRING_DEVTOOLS_RESTART_QUIET_PERIOD: "0.5s"
       SPRING_DEVTOOLS_RESTART_EXCLUDE: "static/**,templates/**"
       SPRING_PROFILES_ACTIVE: container
       SPRING_DATASOURCE_URL: jdbc:postgresql://db_memo_postgres:5432/memo_db

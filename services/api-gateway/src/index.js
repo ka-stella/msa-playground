@@ -1,7 +1,6 @@
 require('dotenv').config();
 
 const express = require('express');
-const http = require('http');
 const corsOptions = require('./config/cors');
 const cookieParser = require('cookie-parser');
 const authMiddleware = require('./middlewares/authMiddleware');
@@ -39,7 +38,8 @@ app.get('/auth/check', (req, res) => {
 app.use('/auth', proxy.authServiceProxyMiddleware);
 app.use('/user', proxy.userServiceProxyMiddleware);
 app.use('/ocrx', proxy.ocrxServiceProxyMiddleware);
-app.use('/memo', proxy.httpMemoServiceProxyMiddleware);
+app.use('/memo', proxy.memoServiceProxyMiddleware);
+app.use('/ws/yjs', proxy.yjsSyncServiceProxyMiddleware);
 
 /**
  * <attention>
@@ -62,13 +62,6 @@ app.post('/logout', (req, res) => {
   res.status(200).json({ message: 'ログアウトしました。' });
 });
 
-const server = http.createServer(app);
-server.on('upgrade', (req, socket, head) => {
-  if (req.url.startsWith('/memo')) {
-    proxy.wsMemoServiceProxyMiddleware.upgrade(req, socket, head);
-  }
-});
-
-server.listen(8000, () => {
-  console.log(`API Gateway running on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Gatewayサーバーがポート ${PORT} で起動しました。`);
 });

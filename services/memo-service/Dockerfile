@@ -22,12 +22,14 @@ COPY --chown=${UID}:${GID} build.gradle .
 COPY --chown=${UID}:${GID} settings.gradle .
 COPY --chown=${UID}:${GID} src src
 
+RUN mkdir -p /app/build && chown -R ${UID}:${GID} /app/build
+
 RUN chmod +x gradlew && \
     chown -R ${UID}:${GID} /app
 
 USER ${UID}:${GID}
 
-# 依存関係のみ事前ダウンロード
-RUN ./gradlew dependencies --no-daemon
+# Gradleビルド実行（デーモンモード無効化）
+RUN ./gradlew build --no-daemon -x test
 
 EXPOSE 3004

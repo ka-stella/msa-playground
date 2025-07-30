@@ -1,0 +1,30 @@
+{
+  "name": "yjs-sync-service",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "eslint src --ext .js,.ts",
+    "lint:fix": "eslint src --ext .js,.ts --fix",
+    "format": "prettier --write src/**/*.{js,ts,json}",
+    "validate": "npm run lint && npm run format",
+    "start": "node src/index.js",
+    "dev": "nodemon --inspect=0.0.0.0:9229 src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "ws": "^8.18.3",
+    "y-websocket": "^2.0.3",
+    "yjs": "^13.6.27"
+  },
+  "devDependencies": {
+    "eslint": "^9.32.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.3",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.6.2"
+  }
+}

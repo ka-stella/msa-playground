@@ -1,5 +1,4 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const logger = require('../../utils/logger');
 const config = require('./proxyConfig');
 
 function createProxy(config) {
@@ -9,22 +8,26 @@ function createProxy(config) {
     onProxyReq: logRequest,
     proxyReqOptDecorator: decorateProxyReq,
     logLevel: 'debug',
-    logger: logger,
+    logger: {
+      log: (...args) => console.log('[Proxy]', ...args),
+      debug: (...args) => console.debug('[Proxy Debug]', ...args),
+      info: (...args) => console.info('[Proxy Info]', ...args),
+      warn: (...args) => console.warn('[Proxy Warn]', ...args),
+      error: (...args) => console.error('[Proxy Error]', ...args),
+    },
   };
   return createProxyMiddleware({ ...defaults, ...config });
 }
 
 function handleError(err, req, res) {
   console.error(`[ERROR] ${err.message}`);
-  logger.error(`[ERROR] ${req.method} ${req.url}: ${err.message}`);
   res.status(502).json({ error: 'Bad Gateway' });
 }
 
 function logRequest(proxyReq, req) {
-  logger.info(
+  console.log(
     `[Proxy] ${req.method} ${req.url} -> ${proxyReq.protocol}//${proxyReq.host}${proxyReq.path}`,
   );
-  logger.debug(`[ProxyReq Path Check] proxyReq.path: ${proxyReq.path}`);
 }
 
 function decorateProxyReq(proxyReq, req) {
@@ -45,6 +48,6 @@ module.exports = {
   authServiceProxyMiddleware: createProxy(config.auth),
   userServiceProxyMiddleware: createProxy(config.user),
   ocrxServiceProxyMiddleware: createProxy(config.ocrx),
-  httpMemoServiceProxyMiddleware: createProxy(config.memoHttp),
-  wsMemoServiceProxyMiddleware: createProxy(config.memoWs),
+  memoServiceProxyMiddleware: createProxy(config.memo),
+  yjsSyncServiceProxyMiddleware: createProxy(config.ySync),
 };
