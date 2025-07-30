@@ -1,26 +1,33 @@
-# ベースイメージとしてOpen JDK 17を使用
 FROM openjdk:17-jdk-slim
 
-# 作業ディレクトリを設定
 WORKDIR /app
 
-COPY gradlew .
-COPY gradle gradle
-COPY build.gradle .
-COPY settings.gradle .
-COPY src src
+# 権限設定（元の設定を保持）
+ARG UID=1000
+ARG GID=1000
+ARG USERNAME=appuser
 
-# Gradle Wrapperの実行権限を付与
-RUN chmod +x gradlew
+RUN if ! grep -q "^[^:]*:[^:]*:${GID}:" /etc/group; then \
+        addgroup --gid ${GID} --system ${USERNAME}; \
+    fi && \
+    if ! grep -q "^[^:]*:[^:]*:${UID}:" /etc/passwd; then \
+        adduser --uid ${UID} --system --ingroup ${USERNAME} --home /home/${USERNAME} --disabled-password --shell /bin/bash ${USERNAME}; \
+    fi && \
+    chown ${UID}:${GID} /home/${USERNAME}
 
-# 依存関係をダウンロードしてキャッシュ (ビルド高速化のため)
+# 必要なファイルのみコピー
+COPY --chown=${UID}:${GID} gradlew .
+COPY --chown=${UID}:${GID} gradle gradle
+COPY --chown=${UID}:${GID} build.gradle .
+COPY --chown=${UID}:${GID} settings.gradle .
+COPY --chown=${UID}:${GID} src src
+
+RUN chmod +x gradlew && \
+    chown -R ${UID}:${GID} /app
+
+USER ${UID}:${GID}
+
+# 依存関係のみ事前ダウンロード
 RUN ./gradlew dependencies --no-daemon
-
-# アプリケーションをビルドし、実行可能なJARファイルを生成
-RUN ./gradlew bootJar --no-daemon
-
-# JARファイルを指定して実行
-# ARG JAR_FILE=build/libs/memo-service-0.0.1-SNAPSHOT.jar
-# ENTRYPOINT ["java", "-jar", ${JAR_FILE}]
 
 EXPOSE 3004

@@ -51,12 +51,15 @@
               <v-icon left>mdi-google</v-icon>
               Googleでログイン
             </v-btn>
+
+            <v-divider class="my-4"></v-divider>
+
+            <v-card-text class="text-center pa-0">
+              アカウントをお持ちでないですか？
+              <router-link to="/register">今すぐ登録</router-link>
+            </v-card-text>
           </v-card-text>
         </v-card>
-        <div class="text-center mt-6">
-          アカウントをお持ちでないですか？
-          <router-link to="/register">今すぐ登録</router-link>
-        </div>
       </v-col>
     </v-row>
   </v-container>

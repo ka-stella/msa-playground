@@ -1,0 +1,51 @@
+services:
+  memo-service:
+    build: ./
+    ports:
+      - '3004:3004'
+      - '35729:35729' # DevToolsのライブリロードポート
+    volumes:
+      - ./:/app
+      - /app/build # バインドマウントから除外（パフォーマンス向上）
+    command: sh -c "./gradlew bootRun --no-daemon --continuous"
+    depends_on:
+      db_memo_postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DEVTOOLS_LIVERELOAD_ENABLED: "true"
+      SPRING_DEVTOOLS_RESTART_ENABLED: "true"
+      SPRING_DEVTOOLS_RESTART_POLL_INTERVAL: "1s"
+      SPRING_DEVTOOLS_RESTART_QUIET_PERIOD: "0.5s"
+      SPRING_DEVTOOLS_RESTART_EXCLUDE: "static/**,templates/**"
+      SPRING_PROFILES_ACTIVE: container
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db_memo_postgres:5432/memo_db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      SERVER_PORT: 3004
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3004/api/health']
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  db_memo_postgres:
+    image: postgres:16-alpine
+    container_name: sample_memo_postgres
+    environment:
+      POSTGRES_DB: memo_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - '15004:5432'
+    volumes:
+      - memo_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U user -d memo_db']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  memo_postgres_data:

@@ -24,7 +24,7 @@
               <td>{{ item.title }}</td>
               <td>{{ item.content }}</td>
               <td>
-                <v-icon small class="mr-2" @click="editMemo(item)"
+                <v-icon small class="mr-2" @click="goToMemoEditor(item.id)"
                   >mdi-pencil</v-icon
                 >
                 <v-icon small @click="deleteMemo(item.id)">mdi-delete</v-icon>
@@ -38,6 +38,7 @@
 </template>
 
 <script setup>
+import { useRouter } from "vue-router";
 import { useMemo } from "@/composables/useMemo";
 import { onMounted, onUnmounted } from "vue";
 
@@ -52,14 +53,19 @@ const {
   loading,
   fetchMemos,
   createMemo,
-  editMemo,
   deleteMemo,
   initializeWebSocket,
   deactivateWebSocket,
 } = useMemo();
 
+const router = useRouter();
+
 const addMemo = () => {
   createMemo("新規メモ", "");
+};
+
+const goToMemoEditor = (id) => {
+  router.push({ name: "memo-editor", params: { id } });
 };
 
 onMounted(() => {
