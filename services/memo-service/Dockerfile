@@ -1,5 +1,7 @@
 FROM openjdk:17-jdk-slim
 
+RUN apt-get update && apt-get install -y netcat
+
 WORKDIR /app
 
 # 権限設定（元の設定を保持）

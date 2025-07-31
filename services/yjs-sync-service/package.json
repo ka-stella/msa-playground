@@ -16,6 +16,11 @@
   "description": "",
   "dependencies": {
     "dotenv": "^17.2.1",
+    "ioredis": "^5.6.1",
+    "kafkajs": "^2.2.4",
+    "lodash": "^4.17.21",
+    "redis": "^5.6.1",
+    "winston": "^3.17.0",
     "ws": "^8.18.3",
     "y-websocket": "^2.0.3",
     "yjs": "^13.6.27"

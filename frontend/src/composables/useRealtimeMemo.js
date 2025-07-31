@@ -32,11 +32,7 @@ export function useRealtimeMemo(memoId) {
     ytextTitle = ydoc.getText(`memo-title-${memoId.value}`);
     ytextContent = ydoc.getText(`memo-content-${memoId.value}`);
 
-    wsProvider = new WebsocketProvider(
-      wsGatewayUrl,
-      `memo-${memoId.value}`,
-      ydoc
-    );
+    wsProvider = new WebsocketProvider(wsGatewayUrl, `${memoId.value}`, ydoc);
 
     // Yjsの変更をVueのrefに反映
     ytextTitle.observe(() => {
