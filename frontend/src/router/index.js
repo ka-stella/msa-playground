@@ -4,7 +4,7 @@ import RegisterView from "../views/RegisterView.vue";
 import LoginView from "../views/LoginView.vue";
 import HomeView from "../views/HomeView.vue";
 import OcrxView from "@/views/OcrxView.vue";
-import MemoView from "@/views/MemoView.vue";
+import MemoEditorView from "@/views/MemoEditorView.vue";
 import MemoListView from "@/views/MemoListView.vue";
 
 const routes = [
@@ -33,16 +33,17 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/memo-list",
-    name: "memo-list",
+    path: "/memos",
+    name: "memos",
     component: MemoListView,
     meta: { requiresAuth: true },
   },
   {
-    path: "/memo",
-    name: "memo",
-    component: MemoView,
+    path: "/memos/:id",
+    name: "memo-editor",
+    component: MemoEditorView,
     meta: { requiresAuth: true },
+    props: true,
   },
 ];
 

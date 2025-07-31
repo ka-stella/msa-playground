@@ -1,4 +1,4 @@
-import { ref, readonly } from "vue";
+import { ref } from "vue";
 
 const snackbar = ref(false);
 const message = ref("");
@@ -18,10 +18,10 @@ export function useSnackbar() {
   };
 
   return {
-    snackbar: readonly(snackbar),
-    message: readonly(message),
-    isError: readonly(isError),
-    timeout: readonly(timeout),
+    snackbar,
+    message,
+    isError,
+    timeout,
     showSnackbar,
     hideSnackbar,
   };

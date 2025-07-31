@@ -3,6 +3,7 @@ frontend/dist/
 services/api-gateway/node_modules/
 services/auth-service/node_modules/
 services/user-service/node_modules/
+services/yjs-sync-service/node_modules/
 
 # IDE
 .vscode/

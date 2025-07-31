@@ -3,7 +3,7 @@
     <v-app-bar-nav-icon @click="emit('toggle-sidebar')"></v-app-bar-nav-icon>
     <v-app-bar-title>My App</v-app-bar-title>
     <v-spacer></v-spacer>
-    <v-btn to="/profile" icon> <v-icon>mdi-account-circle</v-icon> </v-btn>
+    <v-btn to="/" icon> <v-icon>mdi-account-circle</v-icon> </v-btn>
     <v-btn @click="handleLogout" icon> <v-icon>mdi-logout</v-icon> </v-btn>
   </v-app-bar>
 </template>

@@ -1,0 +1,12 @@
+services:
+  yjs-sync-service:
+    build: ./
+    ports:
+      - '3005:3005'
+      - '18005:9229' # デバッグポート
+    volumes:
+      - ./:/app
+    command: npm run dev
+    depends_on:
+      redis:
+        condition: service_healthy
