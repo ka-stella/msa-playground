@@ -1,26 +1,31 @@
-## 実行フロー
-
-### ドキュメント取得
+### 処理フロー
 
 ```mermaid
-graph TD
-  A[getYDoc呼び出し] --> B{存在確認}
-  B -->|存在する| C[既存ドキュメント返却]
-  B -->|存在しない| D[新規ドキュメント作成]
-  D --> E[Redisから状態復元]
-  E --> F[変更監視設定]
-  F --> G[Pub/Sub購読]
-  G --> H[自動保存開始]
-  H --> I[ドキュメント返却]
+sequenceDiagram
+    participant Frontend as フロントエンド (Y.js)
+    participant Backend as バックエンド (Y.js Server)
+    participant Redis as Redis
+    participant Kafka as Kafka
+    participant MemoService as Memo Service
+
+    Note over Frontend,Backend: ユーザーが編集
+    Frontend->>Backend: Y.jsドキュメント更新 (WebSocket)
+
+    Backend->>Redis: 即時保存 (Y.jsのバイナリ差分)
+    activate Redis
+    Redis-->>Backend: 保存完了
+    deactivate Redis
+
+    Note over Backend: debounce(5秒) 待機
+    alt 5秒以内に変更がなければ
+        Backend->>Kafka: イベント発行 (memo.update)
+        activate Kafka
+        Kafka->>MemoService: メモ更新イベント配送
+        deactivate Kafka
+    end
 ```
 
-### 自動保存プロセス
+### TODO
 
-```mermaid
-graph TD
-  A[定期保存タイマー] --> B{変更あり?}
-  B -->|No| C[スキップ]
-  B -->|Yes| D[Redisに保存]
-  D --> E[Kafkaにイベント送信]
-  E --> F[最終更新状態を記録]
-```
+Redisキャッシュが消えた場合、既存データが空白で上書きされる。
+永続化サービスからRedisキャッシュ更新のプッシュ通知する機能を実装する。
