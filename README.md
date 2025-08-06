@@ -3,19 +3,21 @@
 
 | サービス | 技術スタック | ポート |
 | -- | -- | -- |
-| Frontend | Vue + VueRouter + Vuetify + SockJS | 8080 |
+| Frontend | Vue + VueRouter + Vuetify + Yjs | 8080 |
 | API Gateway | Node.js + Express + http-proxy-middleware | 8000 |
 | Auth Service | Node.js + Express + JWT + kafka| 3001 |
 | User Service | Node.js + Express + kafka | 3002 |
 | OCR Service |Flask + Pillow + PyTesseract |3003 |
-| Memo Service |Spring Boot + Spring WebSocket | 3004 |
+| Memo Service |Spring Boot + Kafka | 3004 |
+| Yjs Service | Node.js + Yjs + Redis + Kafka | 3005 |
 
 * [Frontendの概要](./frontend/README.md)
 * [API Gatewayの概要](./services/api-gateway/README.md)
 * [Auth Serviceの概要](./services/auth-service/README.md)
 * [User Serviceの概要](./services/user-service/README.md)
 * [OCR Serviceの概要](./services/ocr-service/README.md)
-* [MEMO Serviceの概要](./services/memo-service/README.md)
+* [Memo Serviceの概要](./services/memo-service/README.md)
+* [yjs Serviceの概要](./services/yjs-sync-service/README.md)
 
 # アーキテクチャ構成図
 ```mermaid
@@ -34,6 +36,7 @@ graph LR
     subgraph データベースレイヤー
         ASDB(Auth Service DB: localhost:5432)
         USDB(User Service DB: localhost:5433)
+        OTDB(Other Service DB: localhost:543x)
     end
 
     F --> AG
@@ -44,6 +47,7 @@ graph LR
 
     AS --> ASDB
     US --> USDB
+    OS --> OTDB
 
     linkStyle 0 stroke:#333,stroke-width:2px,fill:none;
     linkStyle 1 stroke:#333,stroke-width:2px,fill:none;
