@@ -1,0 +1,70 @@
+/* #app {
+  font-family: "BIZ UDPMincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  text-align: center;
+  color: #3d3d3d;
+} */
+
+#vertical-editor {
+  display: flex;
+  flex-direction: row-reverse; /* 縦書きのため、右から左へ並べる */
+  height: 100vh;
+  background: url("https://www.transparenttextures.com/patterns/notebook.png"); /* 和紙のテクスチャ画像 */
+  background-color: #f7f3e9; /* 和紙の色合いに似た背景色 */
+}
+
+.editor-area {
+  flex-grow: 1;
+  padding: 2rem;
+  overflow-y: hidden; /* 縦書きなので、スクロールは横方向 */
+}
+
+.text-input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  resize: none;
+  outline: none;
+  font-size: 1.5rem;
+  line-height: 2.5rem;
+  padding: 0 1rem;
+  writing-mode: vertical-rl; /* 縦書きの指定 */
+  text-orientation: upright;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: scroll; /* 横スクロールを有効にする */
+  scrollbar-width: thin; /* スクロールバーを細くする */
+}
+
+/* スクロールバーのスタイルをカスタマイズ */
+.text-input::-webkit-scrollbar {
+  height: 8px;
+}
+.text-input::-webkit-scrollbar-track {
+  background: #f1e7d8;
+}
+.text-input::-webkit-scrollbar-thumb {
+  background-color: #bfa882;
+  border-radius: 4px;
+}
+
+
+
+
+
+
+
+
+/* プレスホルダーの設定 */
+.tiptap p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+.ProseMirror .is-empty::before {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  white-space: nowrap;
+}

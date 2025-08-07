@@ -19,6 +19,11 @@
         <v-list-item-icon><v-icon>mdi-note</v-icon></v-list-item-icon>
         <v-list-item-title>メモ</v-list-item-title>
       </v-list-item>
+
+      <v-list-item to="/editor" link>
+        <v-list-item-icon><v-icon>mdi-note</v-icon></v-list-item-icon>
+        <v-list-item-title>縦書きエディタ</v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>

@@ -6,6 +6,7 @@ import HomeView from "../views/HomeView.vue";
 import OcrxView from "@/views/OcrxView.vue";
 import MemoEditorView from "@/views/MemoEditorView.vue";
 import MemoListView from "@/views/MemoListView.vue";
+import EditorView from "@/views/EditorView.vue";
 
 const routes = [
   {
@@ -42,6 +43,13 @@ const routes = [
     path: "/memos/:id",
     name: "memo-editor",
     component: MemoEditorView,
+    meta: { requiresAuth: true },
+    props: true,
+  },
+  {
+    path: "/editor",
+    name: "memo-editor",
+    component: EditorView,
     meta: { requiresAuth: true },
     props: true,
   },
